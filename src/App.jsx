@@ -1,18 +1,24 @@
-import { Link, Route, Routes } from 'react-router-dom';
-import './App.css';
+import { useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
+
+import Header from './components/header/Header';
 import Home from './components/Home';
-import { MyContext, useStoreMyContext } from './store/context';
+import { UserContext, useStoreUserContext } from './store/context';
+
 
 function App() {
-  const storeMyContext = useStoreMyContext();
+  const storeUserContext = useStoreUserContext();
+  
 
   return (
-    <MyContext.Provider value={storeMyContext}>
-      <Link to="/">Home</Link>
+    <UserContext.Provider value={storeUserContext}>
+      <Header/>
+      <main>
       <Routes>
         <Route path="/" element={<Home />} />
       </Routes>
-    </MyContext.Provider>
+      </main>
+    </UserContext.Provider>
   );
 }
 

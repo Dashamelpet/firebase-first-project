@@ -1,0 +1,11 @@
+header{
+    background: var( --light-blue-color);
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .nav-list{
+        display: flex;
+        gap: 10px;
+    }
+}

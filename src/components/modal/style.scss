@@ -1,0 +1,25 @@
+.modal-wrap{
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .modal{
+        width: 400px;
+        background:var( --light-blue-color);
+        border-radius: 10px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+    }
+    input{
+        width: 80%;
+        padding: 10px;
+        font-size: 16px;
+    }
+}

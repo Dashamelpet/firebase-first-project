@@ -1,9 +1,8 @@
-import { useMyContext } from '../store/context';
+import { useUserContext } from '../store/context';
 
 function Home() {
-  const { data, changeSetData } = useMyContext();
 
-  return <div onClick={changeSetData}>{data}</div>;
+  return <div>Home</div>;
 }
 
 export default Home;
