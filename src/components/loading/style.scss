@@ -1,0 +1,24 @@
+.spinner-wrap{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba($color: #000000, $alpha: .3);
+    .spinner{
+        border: 5px solid var(--light-gray-color);
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        border-top: 5px solid var(--dark-gray-color);
+        animation: spinner infinite 2s linear;
+    }
+}
+@keyframes spinner {
+    100%{
+        transform: rotate(360deg);
+    }
+}

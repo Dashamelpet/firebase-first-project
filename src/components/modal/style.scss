@@ -16,10 +16,18 @@
         flex-direction: column;
         gap: 20px;
         align-items: center;
+        position: relative;
     }
     input{
         width: 80%;
         padding: 10px;
         font-size: 16px;
+    }
+    .error-text{
+        height: 10px;
+        position: absolute;
+        bottom: 50px;
+        color: red;
+        font-size: 12px;
     }
 }
