@@ -14,8 +14,7 @@ export const createUserAuth = async (email, password) => {
 export const signOutUser = async () => {
   try{
     const res = await signOut(AUTH_FIREBASE);
-    console.log(res)
-    return true
+    return responseGoodApi(null)
   }catch(e){
     return responseBadApi(e.code)
   }
@@ -24,8 +23,10 @@ export const signOutUser = async () => {
 export const loginUserApi = async (email, password) => {
   try {
     const response = await signInWithEmailAndPassword(AUTH_FIREBASE, email, password);
+    console.log(response)
     return responseGoodApi(response.user)
   } catch (e) {
+    console.log(e)
     return responseBadApi(e.code)
   }
 };

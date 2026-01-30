@@ -7,21 +7,25 @@ export default function LogInModal({ closeModal, onAuth, typeModal }) {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [codeError, setCodeError] = useState(null);
-  const isRegist = typeModal === 'regist';
 
+
+  const memoisRegist = useMemo(() => typeModal === 'regist', [typeModal])
+
+
+  // const isRegist =;
   const onHandleClickLogIn = async () => {
     // validation
     const code = await onAuth(login, password);
-    code && setCodeError(code)
+    code && setCodeError(getTextErrorModal(code))
   };
 
   const resetError = () => {
     setCodeError(null)
   };
 
-  const errorText = useMemo(() => {
-    return getTextErrorModal(codeError)
-  }, [codeError]);
+  // const errorText = useMemo(() => {
+  //   return getTextErrorModal(codeError)
+  // }, [codeError]);
 
   const onHandleClickWrap = (e) => {
     e.target == e.currentTarget && closeModal();
@@ -29,7 +33,7 @@ export default function LogInModal({ closeModal, onAuth, typeModal }) {
   return (
     <div className="modal-wrap" onClick={onHandleClickWrap}>
       <div className="modal">
-        {isRegist ? <h2>Регистрация</h2> : <h2>Вход</h2>}
+        {memoisRegist ? <h2>Регистрация</h2> : <h2>Вход</h2>}
         <input
           type="email"
           value={login}
@@ -42,8 +46,8 @@ export default function LogInModal({ closeModal, onAuth, typeModal }) {
           onChange={(e) => setPassword(e.target.value)}
           onFocus={resetError}
         />
-        <p className="error-text">{errorText}</p>
-        {isRegist ? (
+        <p className="error-text">{codeError}</p>
+        {memoisRegist ? (
           <button onClick={onHandleClickLogIn}>Зарегистрироваться</button>
         ) : (
           <button onClick={onHandleClickLogIn}>Войти</button>
