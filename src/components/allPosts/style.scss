@@ -1,0 +1,9 @@
+.all-posts-wrap{
+    .all-posts-list{
+        display: flex;
+        column-gap: calc((100% - 90%) / 2);
+        row-gap: 20px;
+        flex-wrap: wrap;
+    }
+    
+}

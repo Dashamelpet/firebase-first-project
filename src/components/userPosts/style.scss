@@ -1,0 +1,27 @@
+.my-posts-wrap{
+    .my-posts-list{
+        display: flex;
+        column-gap: calc((100% - 90%) / 2);
+        row-gap: 20px;
+        flex-wrap: wrap;
+    }
+    
+}
+@media (max-width: 900px) {
+    .my-posts-wrap{
+    .my-posts-list{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+}
+}
+@media (max-width: 400px) {
+    .my-posts-wrap{
+    .my-posts-list{
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+}
+}

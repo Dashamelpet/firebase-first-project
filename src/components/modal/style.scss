@@ -9,25 +9,32 @@
     align-items: center;
     .modal{
         width: 400px;
-        background:var( --light-blue-color);
+        background:rgb(247, 245, 251, .6);
         border-radius: 10px;
-        padding: 10px;
         display: flex;
+        padding: 0px 10px 10px;
         flex-direction: column;
         gap: 20px;
         align-items: center;
         position: relative;
     }
-    input{
-        width: 80%;
+    .modal-title{
+        background-color: var(--purple-base);
+        color:  var(--text-light);
+        border-radius: 10px 10px 0px 0px;
+        text-align: center;
         padding: 10px;
-        font-size: 16px;
+        width: 100%;
+    }
+    input{
+        padding: 10px 20px;
+        width: 80%;
     }
     .error-text{
         height: 10px;
         position: absolute;
         bottom: 50px;
-        color: red;
+        color: var(--text-main);
         font-size: 12px;
     }
 }

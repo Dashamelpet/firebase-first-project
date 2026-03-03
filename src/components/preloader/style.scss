@@ -1,0 +1,53 @@
+.preloader-wrapper{
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 3;
+    pointer-events: auto;
+    img{
+        width: 60px;
+        height: 60px;
+        display: block;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        animation: logomove .3s linear infinite alternate;
+        transition: 1s all;
+    }
+}
+.preloader-wrapper.hide{
+    pointer-events: none;
+    img{
+        width: 40px;
+        height: 40px;
+        animation:none;
+        // animation-name: logohiding ;
+        // animation-iteration-count: 1;
+        // animation-duration: 1s;
+        // animation-fill-mode: forwards;
+        top: 10px;
+        left: 20px;
+        transition: 1s all;
+    }
+}
+@keyframes logomove{
+    0%{
+        transform: scale(1) translate(-50%, -50%);
+    }
+    100%{
+        transform: scale(1.2) translate(-50%, -50%);
+    }
+}
+// @keyframes logohiding{
+//     0%{
+//         opacity: 1;
+//     }
+//     99%{
+//        opacity: 1;
+//     }
+//     100%{
+//         opacity: 0;
+//     }
+// }

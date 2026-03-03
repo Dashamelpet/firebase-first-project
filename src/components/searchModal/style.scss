@@ -1,0 +1,42 @@
+.search-block{
+    position: relative;
+    .search-user-list{
+        position: absolute;
+        width: 230px;
+        max-height: 200px;
+        overflow-y: auto;
+        border-radius: 10px;
+        background-color: var(--purple-base);
+        text-align: left;
+        max-height: 0;
+        padding: 0 10px;
+        transition: .3s all;
+    }
+    .search-user-item{
+        border-bottom:1px solid var(--purple-soft);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        padding: 5px 0 0;
+    }
+    .user-avatar{
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .search-user-avatar{
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+    }
+    .search-user-name{
+
+    }
+    .search-user-list.open{
+        max-height: 200px;
+        padding: 10px;
+        transition: .3s all;
+    }
+}
