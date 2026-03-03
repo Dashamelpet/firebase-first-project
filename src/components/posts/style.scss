@@ -95,3 +95,14 @@
     .btn-delete{}
     
 }
+
+@media (max-width: 900px){
+    .post-item-wrapper .post-item-card {
+        width: 90%;
+    }
+    .post-item-wrapper .btn-back {
+        top: -60px;
+        left: 60px;
+        z-index: 4;
+    }
+}
