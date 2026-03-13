@@ -11,7 +11,6 @@ const SearchModal = () => {
   const [searchUserList, setSearchUserList] = useState([]);
   const allUsers = store.allUsers.map((item) => item.split('---'));
   const navigate = useNavigate();
-  console.log(searchUserList);
 
   const onSearchUser = (e) => {
     if(e.target.value.trim() !== ''){
@@ -29,7 +28,6 @@ const SearchModal = () => {
     setIsOpenDropList(false);
   }
   const classList = isOpenDropList ? "search-user-list open" : "search-user-list";
-  console.log(isOpenDropList)
   return (
     <div className="search-block">
       <svg

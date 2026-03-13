@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useState } from 'react'
 import {  useNavigate, useParams } from 'react-router-dom';
 import { getCommentsDateFromDB } from '../../firebase/comments';
+import { createErrorNotification } from '../../firebase/helper.api';
 import { useCommentsContext } from '../../store/comments/commentsContext';
 import { useUserContext } from '../../store/user/userContext';
 import Button from '../uix/Button';
@@ -9,7 +10,7 @@ import './style.scss'
 
 const Comments = ({isLogin, isOwner}) => {
     const [text, setText] = useState('');
-    const {createComment, commentsList, setCommentsList, deleteComment} = useCommentsContext();
+    const {createComment, commentsList, setCommentsList, deleteComment, deleteAllComments} = useCommentsContext();
     const {uidURL, id} = useParams();
     const {user} = useUserContext();
     const navigate = useNavigate();
@@ -17,14 +18,14 @@ const Comments = ({isLogin, isOwner}) => {
     useEffect(() =>{
         async function getAllComments(){
             const response = await getCommentsDateFromDB({postAuthorUid:uidURL, postId:id});
-            if(!response.ok) return 'error'
+            if(!response.ok) return createErrorNotification('Ошибка при получении данных с сервера.')
             setCommentsList(response.data);
         }
         getAllComments()
     }, [uidURL,id])
 
     const onAddComment = async() =>{
-        if (text.trim() == '') return 'error'
+        if (text.trim() == '') return createErrorNotification('Комментарий не может быть пустым')
         await createComment( {
             postAuthorUid:uidURL, //
             postId:id, 

@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, deleteUser, signInWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
 import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from 'firebase/storage';
 import { AUTH_FIREBASE, STORAGE_FIREBASE } from './configure.firebase';
 import { apiLoading, responseBadApi, responseGoodApi } from './helper.api';
@@ -14,6 +14,15 @@ export const createUserAuth = async (email, password) => {
     return responseBadApi(e.code)
   }
 };
+export const deleteUserAuth = async() =>{
+  try{
+    await deleteUser(AUTH_FIREBASE.currentUser);
+    return responseGoodApi();
+  }catch(e){
+    console.log(e)
+    return responseBadApi(e.code)
+  }
+}
 const signOutUser_API = async () => {
   try{
     await signOut(AUTH_FIREBASE);
@@ -45,6 +54,7 @@ const updatePhotoUserAvatarFirebase = async (file, uid) =>{
     }
   }catch(e){
     console.log(e)
+    return responseBadApi(e.code)
   }
 }
 
@@ -73,3 +83,4 @@ export const updateUserProfileName_AUTH = async ({userName}) =>{
 export const loginUserApi = apiLoading(loginUserApi_API);
 export const signOutUser = apiLoading(signOutUser_API);
 export const updateUserProfile = apiLoading(updateUserProfile_AUTH);
+

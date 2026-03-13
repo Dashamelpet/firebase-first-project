@@ -1,6 +1,6 @@
 import { collection, deleteDoc, doc, documentId, getDocs, limit, orderBy, query, setDoc } from "firebase/firestore";
 import { DB_FIREBASE } from "./configure.firebase";
-import { generateRandomString, responseBadApi, responseGoodApi } from "./helper.api";
+import { createErrorNotification, generateRandomString, responseBadApi, responseGoodApi } from "./helper.api";
 
 //helper
 const createDataForComment = (commentAuthorUid, text, userName) => {
@@ -54,5 +54,19 @@ export const deleteOneCommentFromDB = async(date, uid, id) =>{
     }catch(e){
         console.log(e.code)
         return responseBadApi(e.code)
+    }
+}
+
+export const deleteAllCommentsFromDB = async({uid, id}) =>{
+    try{
+        const link =  collection(DB_FIREBASE, 'users', uid, 'posts', id, 'comments')
+        const response = await getDocs(link);
+        if(response.empty) return responseGoodApi();
+        await Promise.all(
+        response.docs.map(item =>  deleteDoc(item.ref)));
+        return responseGoodApi();
+    } catch(e){
+        console.log(e)
+        return responseBadApi(e.code);
     }
 }

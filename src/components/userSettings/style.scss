@@ -55,3 +55,22 @@
         }
     }
 }
+.theme-setting{
+    .inputs-block{
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    .inputs-block span{
+        margin-right: 10px;
+        color: var(--text-light);
+        font-weight: bold;
+    }
+    .inputs-block input{
+        border: 1px solid var(--btn-primary);
+        cursor: pointer;
+    }
+    .inputs-block button{
+        margin-left: 30px;
+    }
+}

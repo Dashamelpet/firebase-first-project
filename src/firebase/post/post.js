@@ -4,6 +4,7 @@ import { apiLoading, generateRandomString, responseBadApi, responseGoodApi } fro
 import { addImgToApi, deleteImgFromApi } from '../apiImg';
 import { deleteTopPosts } from '../topPosts';
 import { setCurrentUserPosts } from '../../store/store';
+import { deleteAllCommentsFromDB } from '../comments';
  
 // export const apiLoading = (callback) => async (...arg) => {
 //   store.startLoading()
@@ -38,8 +39,8 @@ const createPostInDB_API = async ({ uid, text, title, img }) => {
     if (!responseImg.ok) return responseImg;
     const data = createDataForPost(text, title);
     const linkDoc = doc(DB_FIREBASE, 'users', uid, 'posts', id);
-    await setDoc(linkDoc, data);
     data.id = id;
+    await setDoc(linkDoc, data);
     return responseGoodApi(data);
   } catch (e) {
     return responseBadApi(e.code);
@@ -79,14 +80,21 @@ export const getMyPostsFromDB_API = async (uid) => {
 
 const deleteOnePostFropDB_API = async ({ uid, id }) => {
   try {
+    //удаляю картиинку
     const imgLink = uid + '/' + id;
-    console.log("id", id)
     const responseImg = await deleteImgFromApi(imgLink);
     if (!responseImg.ok) return responseImg;
+    //удаляю комментарии
+    const responseComments = await deleteAllCommentsFromDB({uid, id});
+    if(!responseComments.ok) return responseComments;
+    //удаляю пост
     const linkDoc = doc(DB_FIREBASE, 'users', uid, 'posts', id);
     await deleteDoc(linkDoc);
+    //обновляю топ
     const responseNew = await deleteTopPosts(id, 'new');
+    if(!responseNew.ok) return responseNew;
     const responeLikes = await deleteTopPosts(id, 'likes');
+    if(!responeLikes.ok) return responeLikes;
     return responseGoodApi({topLikesPosts:responeLikes.data, topNewPosts: responseNew.data});
   } catch (e) {
     return responseBadApi(e.code);
@@ -102,6 +110,23 @@ export const updatePostFromDB_API = async ({ uidURL, id, newPost }) => {
     return responseBadApi(e.code);
   }
 };
+
+export const deleteAllPostsFrom_DB = async(uid) => {
+  try{
+    const link = collection(DB_FIREBASE, 'users', uid, 'posts');
+    const response = await getDocs(link);
+    if(response.empty) return responseGoodApi();
+    await Promise.all(response.docs.map(async(post) => {
+      const postId = post.id;
+      const responsePost = await deleteOnePostFropDB_API({uid, id: postId});
+      if(!responsePost.ok) throw new Error(responsePost.code);
+    }));
+    return responseGoodApi();
+  } catch(e){
+    console.log(e);
+    return responseBadApi(e.code)
+  }
+}
 
 export const getPostsFromDB = getPostsFromDB_API;
 // export const getPostsFromDB = apiLoading(getPostsFromDB_API);

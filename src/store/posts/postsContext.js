@@ -19,7 +19,7 @@ import {
   updateTopAuthor,
   updateTopLikesPostsDB,
 } from '../../firebase/topPosts';
-// import {  getCurrentUserPosts, store } from '../store';
+import { createErrorNotification } from '../../firebase/helper.api';
 
 const postOneTest = {
   avatar: 'url',
@@ -44,7 +44,7 @@ export const postsContextCustom = () => {
 
   const updateTopNewPosts = async ({ uid, id, name }) => {
     const response = await addTopPostsForNew({ uid, id, name });
-    if (!response.ok) return 'error';
+    if (!response.ok) return createErrorNotification('Ошибка получения данных с сервера');
     setTopNewPosts(response.data);
 
   };
@@ -55,7 +55,7 @@ export const postsContextCustom = () => {
   }
   const getNewTopPosts = async () => {
     const response = await getTopPostsFromDB('new');
-    if (!response.ok) return 'error';
+    if (!response.ok) return createErrorNotification('Ошибка получения данных с сервера');
 
     onUpdateNewTopPosts(response.data);
   };
@@ -68,7 +68,7 @@ export const postsContextCustom = () => {
 
   const getLikesTopPosts = async () => {
     const response = await getTopPostsFromDB('likes');
-    if (!response.ok) return 'error';
+    if (!response.ok) return createErrorNotification('Ошибка получения данных с сервера');
     const sortedPosts = sortAsc(response.data, 'likes'); // sort по 0 - 9
     setMinForTop(prev => {
       return {...prev, likes: sortedPosts[0].likes}
@@ -84,31 +84,34 @@ export const postsContextCustom = () => {
   };
 
   //!top authors
-
+ const onHandleSetTopAuthor = (data) =>{
+    data.splice(15);
+    setTopAuthors(data);
+ }
   const getTopAuthors = async () => {
     const response = await getTopPostsFromDB('avtor');
-    if (!response.ok) return 'error';
+    if (!response.ok) return createErrorNotification('Ошибка получения данных с сервера');;
+    console.log(response.data)
     const sortedAuthors = sortAsc(response.data, 'posts');
     // limit to show 15
-    sortedAuthors.splice(15);
     setMinForTop(prev => {
       return {...prev, authors: sortedAuthors[0].posts}
     })
-    setTopAuthors(sortedAuthors);
+    onHandleSetTopAuthor(sortedAuthors);
   };
 
   const onUpdateAutorsTop = async({uid,name}) => {
     const count = store.currentUserPosts.length;
     if(minForTop.authors > count) return;
     const responseAutors = await updateTopAuthor({uid, name, countPosts: count});
-    if(!responseAutors.ok) return 'error'
+    if(!responseAutors.ok) return createErrorNotification('Ошибка получения данных с сервера');
     setTopAuthors(sortAsc(responseAutors.data,'posts'));
   }
   //! Post 
 
 const deleteOnePost = async ({ uid, id, name }) => {
   const response = await deleteOnePostFropDB({ uid, id });
-  if (!response.ok) return 'error';
+  if (!response.ok) return createErrorNotification('Ошибка получения данных с сервера');
   //! обновление в store
   deletePostFromCurrentUser(id);
   setTopNewPosts(response.topNewPosts);
@@ -120,7 +123,7 @@ const deleteOnePost = async ({ uid, id, name }) => {
 
 const getCurrentPost = async (uid, id) => {
   const post = await getOnePostFromDB(uid, id);
-  if (!post.ok) return 'error';
+  if (!post.ok) return createErrorNotification('Ошибка получения данных с сервера');
   return post.data;
 };
 
@@ -189,6 +192,7 @@ return {
     getCurrentUserPosts,
     onUpdateNewTopPosts,
     onUpdateLikeTopPosts,
+    onHandleSetTopAuthor,
   };
 };
 export const usePostsContext = () => useContext(PostsContext);

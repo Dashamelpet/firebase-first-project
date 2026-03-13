@@ -8,11 +8,14 @@ import { UserProvider } from './store/user/UserProvider';
 import { PostsProvider } from './store/posts/PostsProvider';
 import { CommentsProvider } from './store/comments/CommentsProvider';
 import { apiLoading } from './firebase/helper.api';
+import { Provider } from 'react-redux';
+import { store } from './redux';
 // console.log('start')
 
 // console.log(apiLoading)
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
+  <Provider store={store}>
     <LoadingProvider>
       <UserProvider>
         <PostsProvider>
@@ -22,5 +25,6 @@ createRoot(document.getElementById('root')).render(
         </PostsProvider>
       </UserProvider>
     </LoadingProvider>
+    </Provider>
   </BrowserRouter>,
 );

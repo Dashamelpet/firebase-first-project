@@ -9,6 +9,8 @@ import './style.scss';
 import Avatar from '../helper/Avatar';
 import SearchModal from '../searchModal/SearchModal';
 import RightMenu from '../rightMenu/RightMenu';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from '../../redux/user/user.provider';
 
 const buttons = {
   login: { type: 'login', text: 'Войти' },
@@ -17,6 +19,9 @@ const buttons = {
 
 const Header = () => {
   const { user } = useUserContext();
+  // const store = useSelector((store) => store)
+  const userStore = useSelector((store) => store.userStore) //!
+  console.log(userStore) //!
   const [isOpenModal, setIsopenModal] = useState(false);
   const [typeModal, setTypeModal] = useState(null);
   const { isLogin, onCreateUser, onSignOut, onSignUser } = useUserContext();
@@ -57,9 +62,15 @@ const Header = () => {
     setIsOpenSandwich(!isOpenSandwich);
   };
 
+  const dispatch = useDispatch() //!
+
+const onTestRedux = () => {
+  dispatch(setUser({name : 'ss'})) //!
+}
   return (
     <header>
       <div className="logo"></div>
+      {/* <button onClick={onTestRedux}>test</button> */}
       <nav className="nav-list">
         {/* <NavLink className={(arg) => (arg.isActive ? 'active logo' : ' logo')} to="/"> */}
         {/* <img src="/src/assets/logo.svg" alt="" /> */}

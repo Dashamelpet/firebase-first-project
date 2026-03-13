@@ -1,6 +1,26 @@
+import { Bounce, toast } from "react-toastify";
 import { store } from "../store/store"
 
+export const createErrorNotification = (text) => {
+    toast.error(text || 'Error', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+        style: {
+            background: "#5E548E",
+            color: "#fff"
+          }
+        });
+}
+
 export const responseBadApi = (code) => {
+    createErrorNotification(getTextErrorModal(code));
     return {ok : false, data : null, code}
 }
 export const responseGoodApi = (data) => {

@@ -7,25 +7,27 @@ import { usePostsContext } from '../../store/posts/postsContext';
 import {getURL_IMG } from '../../firebase/apiImg';
 import Comments from '../comments/Comments';
 
+
 import './style.scss';
 import Avatar from '../helper/Avatar';
 import { deletePostFromCurrentUser } from '../../store/store';
 import Image from '../uix/Image';
 import Button from '../uix/Button';
+import { useCommentsContext } from '../../store/comments/commentsContext';
 
 const PostItem = () => {
   const navigate = useNavigate();
   const param = useParams();
-  
+ 
+
   const { getCurrentPost, changeLiketoDB, deleteOnePost } = usePostsContext();
+  const {deleteAllComments} = useCommentsContext();
   const {isLogin} = useStoreUserContext();
   const { user } = useUserContext();
   const { uidURL, id } = param;
-  const [currentPost, setCurrentPost] = useState({});
-console.log(currentPost)
+  const [currentPost, setCurrentPost] = useState(null);
   const uidOwner = user?.uid;
   const isOwner = uidOwner === uidURL;
-
   useEffect(() => {
      const spanshot = getUpdateForLivePost({uid: uidURL, id }, setCurrentPost);
     return () => {
@@ -40,7 +42,8 @@ console.log(currentPost)
   }, [currentPost]);
 
   const onHandleClickDeletePost = async () => {
-    const response = await deleteOnePost({ uid: uidURL, id: id, name:user.name});
+    // await deleteAllComments({uid: uidURL, id});//!может перенести в deleteOnePostFropDB_API
+    await deleteOnePost({ uid: uidURL, id: id, name:user.name});
     navigate('/posts/' + uidURL);
   };
 
@@ -50,9 +53,10 @@ console.log(currentPost)
     setCurrentPost(post)
   };
   return (
-    <div className="post-item-wrapper">
+    <div className="post-item-wrapper" >
+      
       <Button className="btn-back" onClick={() => navigate(-1)} text={'<<'}/>
-      <div className="post-item-card">
+      {currentPost ? (<div className="post-item-card">
         <div className="user-info">
           <Avatar uid={uidURL} onClick={() => navigate('/posts/' + uidURL)}/>
         </div>
@@ -84,7 +88,7 @@ console.log(currentPost)
           </div>
         )}
 
-      </div>
+      </div>):<h2>NotFound</h2>}
     </div>
   );
 };

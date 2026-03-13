@@ -3,6 +3,7 @@
 import { getAllUsersFromDB, updateNameUserToDB } from '../firebase/userNames';
 
 export const store = {
+  isLogin: false,//!
   currentUser: {},
   currentUserPosts: [],
   allUsers: [],
@@ -10,6 +11,7 @@ export const store = {
   startLoading: () => {},
   stopLoading: () => {},
 };
+
 
 //loading
 export const getLoadingContext = ({ startLoading, stopLoading }) => {
@@ -61,6 +63,11 @@ export const changePostFromCurrentUser = ({ id, newPost }) => {
   store.currentUserPosts[index] = newPost;
 };
 
+export const deleteAllPostsFromCurrentUser = () => {
+  store.currentUserPosts = [];
+};
+
+
 // allUsers
 
 export const setAllUsers = async () => {
@@ -73,6 +80,9 @@ export const addUserToAllUsers = async({name, uid}) =>{
     const response = addUserToDB({name, uid});
     if(response.ok) store.allUsers = [...store.allUsers, response.data];
 }
+export const deleteCurrentUserFromAll = (uid) => {
+  store.allUsers = store.allUsers.filter(item => !item.includes(uid));
+}
 
 export const updateStoreNameUser = async({newName ,uid}) => {
     const response = await updateNameUserToDB(newName ,uid);
@@ -81,4 +91,5 @@ export const updateStoreNameUser = async({newName ,uid}) => {
         store.allUsers[index] = response.data
     }
 }
+
 window.store = store;

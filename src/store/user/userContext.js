@@ -4,6 +4,7 @@ import { createContext, useContext, useState } from 'react';
 import { getAvatarURL_IMG, onCommpressedImg } from '../../firebase/apiImg';
 import { createUserAuth, loginUserApi, signOutUser, updateUserProfile, updateUserProfileName_AUTH, updateUserProfile_AUTH } from '../../firebase/auth';
 import { AUTH_FIREBASE } from '../../firebase/configure.firebase';
+import { createErrorNotification } from '../../firebase/helper.api';
 import { getMyPostsFromDB_API, getPostsFromDB } from '../../firebase/post/post';
 import { addUserToDB } from '../../firebase/userNames';
 import { setAllUsers, setCurrentUser, setCurrentUserPosts, updateStoreNameUser } from '../store';
@@ -49,7 +50,6 @@ export const useStoreUserContext = () => {
     });
     //добавление в store массив пользователей
     setAllUsers();
-    
   }, []);
 
   const updateUserData = (data) => {
@@ -59,7 +59,7 @@ export const useStoreUserContext = () => {
         email: data.email,
         uid: data.uid,
         avatar: data.photoURL || '',
-        name: data.displayName || '',
+        name: data.displayName || 'user',
       };
     });
   };
@@ -67,7 +67,7 @@ export const useStoreUserContext = () => {
 //!улучшить код
 const updateNameUser = async ({userName, uid}) => {
     const response = await updateUserProfileName_AUTH({userName});
-    if(!response.ok) return // Не удалось обновить профайл
+    if(!response.ok) return createErrorNotification('Ошибка получения данных с сервера');// Не удалось обновить профайл
     console.log('name update')
     setUser((prev) => {
       return {...prev, name: response.data.name}
@@ -79,7 +79,7 @@ const updateFullDataUser = async ({userName, photoFile, uid}) => {
     const img = photoFile !== null ? await onCommpressedImg(photoFile) : null;
     const response = await updateUserProfile({userName, photoFile: img, uid});
     console.log('fulldata update')
-    if(!response.ok) return // Не удалось обновить профайл
+    if(!response.ok) return  createErrorNotification('Ошибка получения данных с сервера');// Не удалось обновить профайл
     setUser((prev) => {
       return {...prev, name: response.data.name, avatar: response.data.avatar}
     })

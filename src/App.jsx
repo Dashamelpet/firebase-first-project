@@ -15,10 +15,19 @@ import { PostsProvider } from './store/posts/PostsProvider';
 import { UserProvider } from './store/user/UserProvider';
 import AllPosts from './components/allPosts/AllPosts';
 import RightMenu from './components/rightMenu/RightMenu';
+import { ToastContainer } from 'react-toastify';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 
 function App() {
   const {isLoading} = useLoadingContext();
+  const {textColor,btnBg} = useSelector(store => store.themeStore);
+  useEffect(() => {
+    document.documentElement.style.setProperty('--text-light', textColor);
+    document.documentElement.style.setProperty('--btn-primary', btnBg);
+  }, [textColor, btnBg]);
+
   return (
         <div className="page-wrapper">
           <Header />
@@ -34,6 +43,7 @@ function App() {
             </Routes>
           </main>
           {isLoading && <Loading />} 
+          <ToastContainer />
           {/* <RightMenu /> */}
         </div>
 

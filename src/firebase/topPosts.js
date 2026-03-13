@@ -96,3 +96,17 @@ export const updateTopAuthor = async ({ uid, name, countPosts }) => {
   }
 };
 
+export const deleteUserFromTopAuthors = async({uid}) =>{
+  try{
+    const linkDoc = doc(DB_FIREBASE, 'posts', 'avtor');
+    const response = await getDoc(linkDoc);
+    const authors = response.data().data;
+    const indexToDelete = authors.findIndex((item) => item.uid === uid);
+    if(indexToDelete !== -1) authors.splice(indexToDelete, 1);
+    await setDoc(linkDoc, { data: authors });
+    return responseGoodApi();
+  }catch(e){
+    console.log(e);
+    responseBadApi(e.code);
+  }
+}

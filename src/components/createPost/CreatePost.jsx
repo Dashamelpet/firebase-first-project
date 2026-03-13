@@ -7,6 +7,7 @@ import placeholderImg from '/src/assets/placeholder-img.svg';
 import './style.scss';
 import AutorisationHOC from '../../HOC/AutorisationHOC';
 import { addPostToCurrentUser } from '../../store/store';
+import { createErrorNotification } from '../../firebase/helper.api';
 
 const imgTest = {
   url: placeholderImg,
@@ -24,17 +25,17 @@ const CreatePost = () => {
 
   const changePhotoUrl = async (e) =>{
     const file = e.target.files[0];
-    if(!(file instanceof File)) return 'Error'
+    if(!(file instanceof File)) return createErrorNotification('Invalid file');
     const previewUrl = URL.createObjectURL(file);
     setImg({url: previewUrl , file});
   }
 
   const onHandleBtnCreate = async () => {
-    if(text.trim() === '') return 'Error'
-    if(title.trim() === '') return 'Error'
-    if(img.url === placeholderImg) return 'Error';
+    if(text.trim() === '') return createErrorNotification('Данные должны быть заполнены');
+    if(title.trim() === '') return createErrorNotification('Данные должны быть заполнены');
+    if(img.url === placeholderImg) return createErrorNotification('Invalid file');
     const post = await createPost({ uid: user.uid, text, title, img: img.file ,name: user.name});
-    if(!post) return 'Error'
+    if(!post) return createErrorNotification('Ошибка при отправке данных на сервер.')
     navigate('/posts/' + user.uid + '/' + post.id);
   };
   return (

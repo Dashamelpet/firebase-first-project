@@ -1,6 +1,6 @@
 import { deleteObject, ref, uploadBytesResumable } from "firebase/storage";
 import { STORAGE_FIREBASE } from "./configure.firebase";
-import { apiLoading,responseBadApi, responseGoodApi } from "./helper.api";
+import { apiLoading,createErrorNotification,responseBadApi, responseGoodApi } from "./helper.api";
 import imageCompression from 'browser-image-compression';
 
 // helper 
@@ -22,6 +22,7 @@ export const onCommpressedImg = async (file) =>{
         return compressedFile;
       } catch (e) {
         console.log(e);
+        createErrorNotification('Ошибка загрузки файла');
     }
 }
 
@@ -41,12 +42,15 @@ try {
 }
 }
 
-const deleteImgFromApi_API = async (imgLink) =>{
+export const deleteImgFromApi_API = async (imgLink) =>{
     try{
         const link = ref(STORAGE_FIREBASE, imgLink);
         await deleteObject(link);
         return responseGoodApi()
     } catch(e){
+        if (e.code === 'storage/object-not-found') {
+            return responseGoodApi(); 
+        }
         return responseBadApi(e.code)
     }
 }

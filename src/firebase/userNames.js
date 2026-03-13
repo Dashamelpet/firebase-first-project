@@ -49,3 +49,20 @@ export const updateNameUserToDB = async (newName ,uid) =>{
         return responseBadApi(e.code)
     }
 }
+
+export const deleteNameUserToDB = async(uid) =>{
+  try {
+    const link = doc(DB_FIREBASE, 'usernames', 'list');
+    const response = await getDoc(link);
+    if(!response.exists()) return responseGoodApi();
+    const users = response.data().data;
+    const indexToDelete = users.findIndex(item => item.includes(uid));
+    if(indexToDelete === -1) return responseGoodApi();
+    users.splice(indexToDelete, 1);
+    await updateDoc(link, { data: users });
+    return responseGoodApi();
+  }catch(e){
+    console.log(e);
+    return responseBadApi(e.code)
+  }
+}
