@@ -1,6 +1,7 @@
 // import { getPostsFromDB,  } from "../firebase/post/post";
 
 import { getAllUsersFromDB, updateNameUserToDB } from '../firebase/userNames';
+import { setLoading } from '../redux/loading.provider';
 
 export const store = {
   isLogin: false,//!
@@ -14,42 +15,20 @@ export const store = {
 
 
 //loading
-export const getLoadingContext = ({ startLoading, stopLoading }) => {
+
+export const setStoreLoading = (startLoading, stopLoading) =>{
   store.startLoading = startLoading;
   store.stopLoading = stopLoading;
-};
-
-// curent user
+}
 
 export const setCurrentUser = (user) => {
   store.currentUser = user;
 };
-//!!! так apiLoading ломается
-// export const setCurrentUserPosts = async (uid) =>{
-//     const response = await getPostsFromDB(uid);
-//     if(response.ok) {
-//         store.currentUserPosts = response.data;
-//     }
-// }
 
-//!так не ломается
+
 export const setCurrentUserPosts = (posts) => {
   store.currentUserPosts = posts;
 };
-//!
-// export const setCurrentUserPosts = async (uid) => {
-//   try {
-//     const linkDoc = collection(DB_FIREBASE, 'users', uid, 'posts');
-//     const response = await getDocs(linkDoc);
-//     if(response.empty) return 'error'
-//     const posts = response.docs.map((item) => {
-//       return { id: item.id, ...item.data() };
-//     });
-//     store.currentUserPosts = posts;
-//   } catch (e) {
-//     console.log(e);
-//   }
-// };
 
 export const deletePostFromCurrentUser = (id) => {
   store.currentUserPosts = store.currentUserPosts.filter((item) => item.id !== id);

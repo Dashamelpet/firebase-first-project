@@ -1,40 +1,43 @@
 import { useEffect } from 'react';
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import {  useNavigate, useParams } from 'react-router-dom';
 import { getCommentsDateFromDB } from '../../firebase/comments';
 import { createErrorNotification } from '../../firebase/helper.api';
-import { useCommentsContext } from '../../store/comments/commentsContext';
+import { createComment, deleteComment, getCommentsList } from '../../redux/comments.provider';
 import { useUserContext } from '../../store/user/userContext';
 import Button from '../uix/Button';
 import './style.scss'
 
 const Comments = ({isLogin, isOwner}) => {
     const [text, setText] = useState('');
-    const {createComment, commentsList, setCommentsList, deleteComment, deleteAllComments} = useCommentsContext();
     const {uidURL, id} = useParams();
     const {user} = useUserContext();
     const navigate = useNavigate();
     
+    const dispatch = useDispatch();
+    const commentsList = useSelector(store => store.commentsStore.commentsList);
+
     useEffect(() =>{
         async function getAllComments(){
             const response = await getCommentsDateFromDB({postAuthorUid:uidURL, postId:id});
             if(!response.ok) return createErrorNotification('Ошибка при получении данных с сервера.')
-            setCommentsList(response.data);
+            dispatch(getCommentsList(response.data));
         }
         getAllComments()
     }, [uidURL,id])
 
     const onAddComment = async() =>{
         if (text.trim() == '') return createErrorNotification('Комментарий не может быть пустым')
-        await createComment( {
+        const response = await dispatch(createComment( {
             postAuthorUid:uidURL, //
             postId:id, 
-
             commentAuthorUid: user.uid, 
             text, 
             userName: user.name
-        });
-        setText('')
+        }));
+
+        if(response.ok) setText('')
     }
     const onOpenUserPosts = (uid) =>{
         navigate('/posts/' + uid)
@@ -47,7 +50,7 @@ const Comments = ({isLogin, isOwner}) => {
                     return (<div className='comment-item' key={item.date}>
                     <span className='comment-username' onClick={() => onOpenUserPosts(item.authorID)}>{item.userName || 'noname'}</span>
                     <span className='comment-text'>{item.text}</span>
-                    {isOwner && <Button className='delete-comment-btn' onClick={()=>deleteComment(item.date, user.uid, id)} text="x"/>}
+                    {isOwner && <Button className='delete-comment-btn' onClick={()=> dispatch(deleteComment({date:item.date, uid:user.uid, id} ))} text="x"/>}
                 </div>)
                 })}
             

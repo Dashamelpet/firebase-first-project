@@ -13,7 +13,6 @@ import Avatar from '../helper/Avatar';
 import { deletePostFromCurrentUser } from '../../store/store';
 import Image from '../uix/Image';
 import Button from '../uix/Button';
-import { useCommentsContext } from '../../store/comments/commentsContext';
 
 const PostItem = () => {
   const navigate = useNavigate();
@@ -21,7 +20,6 @@ const PostItem = () => {
  
 
   const { getCurrentPost, changeLiketoDB, deleteOnePost } = usePostsContext();
-  const {deleteAllComments} = useCommentsContext();
   const {isLogin} = useStoreUserContext();
   const { user } = useUserContext();
   const { uidURL, id } = param;

@@ -7,26 +7,25 @@ import Loading from './components/loading/Loading';
 import UserPosts from './components/userPosts/UserPosts';
 import PostItem from './components/posts/PostItem';
 import UserSettings from './components/userSettings/UserSettings';
-import { UserContext, useStoreUserContext } from './store/user/userContext';
-import { LoadingContext, loadingContextCustom, useLoadingContext } from './store/loading/loadingContext';
-import { PostsContext, postsContextCustom } from './store/posts/postsContext';
-import { LoadingProvider } from './store/loading/LoadingProvider';
-import { PostsProvider } from './store/posts/PostsProvider';
-import { UserProvider } from './store/user/UserProvider';
 import AllPosts from './components/allPosts/AllPosts';
 import RightMenu from './components/rightMenu/RightMenu';
 import { ToastContainer } from 'react-toastify';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
+import { setLoading } from './redux/loading.provider';
+import { setStoreLoading } from './store/store';
 
 
 function App() {
-  const {isLoading} = useLoadingContext();
-  const {textColor,btnBg} = useSelector(store => store.themeStore);
+  const {isLoading} =  useSelector((store) => store.loadingStore);
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    document.documentElement.style.setProperty('--text-light', textColor);
-    document.documentElement.style.setProperty('--btn-primary', btnBg);
-  }, [textColor, btnBg]);
+    setStoreLoading(
+      () => dispatch(setLoading(true)), 
+      () => dispatch(setLoading(false))
+    );
+  }, []);
 
   return (
         <div className="page-wrapper">
@@ -51,9 +50,4 @@ function App() {
 }
 
 export default App;
-
-
-
-
-// HOC 
-//  
+ 
